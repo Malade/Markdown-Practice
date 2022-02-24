@@ -227,3 +227,161 @@ timeout( () => {
 
 화살표 함수는 자신이 선언된 함수 범위에서 this 정의
 
+# forEach, map 차이
+
+`map()` 메서드는 배열 내의 모든 요소 각각에 대하여 주어진 함수를 호출한 결과를 모아 새로운 배열을 반환합니다.
+
+`forEach()` 메서드는 주어진 함수를 배열 요소 각각에 대해 실행합니다.
+
+배열의 요소 각각에 대해 실행한다는 공통점이 있지만 반환을 하는지 함수 실행만 하는지에 대한 차이가 있습니다.
+
+# 구조 분해 할당 (Destructing Assignment)
+
+객체, 혹은 배열 데이터를 다시 할당해서 내부의 데이터를 꺼내어 쓸 수  있다. 
+객체의 경우는 Key를 입력해 Value 를 꺼낼 수 있고, 배열은 인덱스에 따라서 꺼낼 수 있다.   
+모든 데이터를 꺼낼 필요 없이, 필요한 데이터만 꺼낼 수 있다.
+
+ex) 
+```JS
+const user = {
+  name : 'Malade',
+  age : 28,
+  email : 'oxywriter@gmail.com'
+}
+
+console.log(`${name}`)
+console.log(`${age}`)
+console.log(`${email}`)
+
+// 결과 --- Uncaught reference error
+// name, age, email 이 undefined
+
+-----------------------------------------------
+
+const user = {
+  name : 'Malade',
+  age : 28,
+  email : 'oxywriter@gmail.com'
+}
+
+const { name, age, email, address } = user
+
+console.log(`${name}`)
+console.log(`${age}`)
+console.log(`${email}`)
+
+// 결과 --- Malade
+//          28
+//          oxywriter@gmail.com
+```
+
+
+# 전개 연산자 (Spread)
+배열의 데이터를 `전개`해서 출력한다.  
+
+ex)
+```JS
+const fruits = ['Apple', 'Banana', 'Cherry']
+
+console.log(fruits)
+console.log(...fruits)
+
+// 결과 --- ['Apple', 'Banana', 'Cherry']
+//          Apple Banana Cherry
+
+function toObject(a, b, c) {
+  return {
+    a: a,
+    b: b,
+    c: c
+  }
+}
+
+console.log(toObject(...fruits))
+
+// 결과 --- {a: 'Apple'
+//           b: 'Banana'
+//           c: 'Cherry}
+```
+
+# 데이터 불변성 (Immutability)
+원시 데이터가 한번 만들어져 메모리에 할당된다면, 같은 값을 이용하는 데이터를 만들 때 새로운 메모리에 할당하는 것이 아닌 이미 할당되어있는 메모리에 있는 값을 이용한다.
+
+`원시 데이터 : String, Number, Boolean, undefined, null`  
+
+ex)
+```JS
+let a = 1
+let b = 4
+console.log(a, b, a === b)
+
+// 결과 : 1 4 false
+
+b = a
+console.log(a, b, a === b)
+
+// 결과 : 1 1 true
+
+a = 7
+console.log(a, b, a === b)
+
+// 결과 : 7 1 false
+
+let c = 1
+console.log(b, c, b === c)
+
+// 결과 : 1 1 true
+```
+
+위의 코드를 보면, 처음에는 a = 1 일 때와 b = 4 일때는 같지 않다. 하지만 b에 a의 값을 할당하면, a와 b의 값이 같기 때문에 참이 나온다기 보다는 같은 메모리 상의 데이터를 바라보기 때문에 참이 나온다.  
+그리고 c에 1이란 값을 정해주면 새로운 메모리를 할당받는 것이 아닌, 이미 1이란 데이터가 들어있는 메모리를 바라보기 때문에 b와 동일한 메모리를 바라본다. 따라서 둘이 같은지 비교할 경우 참의 값을 가진다.
+
+`참조형 데이터`의 경우, 한번 정해진 값에서 값을 변경하여도 같은 메모리 상에서 데이터가 변경되고 새로운 메모리가 할당되지 않는다.
+
+`참조형 데이터 : Object, Array, Function`
+
+ex) 
+```JS
+let a = { k : 1}
+let b = { k : 1}
+console.log(a, b, a === b)
+
+//결과 : {k : 1}
+//       {k : 1}
+//       false
+
+a.k = 7
+b = a
+console.log(a, b, a === b)
+
+//결과 : {k : 7}
+//       {k : 7}
+//       true
+
+a.k = 2
+console.log(a, b, a === b)
+
+//결과 : {k : 2}
+//       {k : 2}
+//       true
+
+let c = b
+console.log(a, b, c, a === c)
+
+//결과 : {k : 2}
+//       {k : 2}
+//       {k : 2}
+//       true
+
+
+a.k = 9
+console.log(a, b, c, a === c)
+
+//결과 : {k : 9}
+//       {k : 9}
+//       {k : 9}
+//       true
+```
+
+위에서 본 것과 같이, 한번 a를 참조한 b나 c는 a의 값이 바뀌어도 바뀐 값을 그대로 따라간다. 이는 같은 메모리를 참조하고 있기 때문이다.
+
