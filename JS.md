@@ -385,3 +385,55 @@ console.log(a, b, c, a === c)
 
 위에서 본 것과 같이, 한번 a를 참조한 b나 c는 a의 값이 바뀌어도 바뀐 값을 그대로 따라간다. 이는 같은 메모리를 참조하고 있기 때문이다.
 
+# export
+export 방식에는 두가지가 있다.  
+하나는 `default` export 방식, 다른 하나는 `named` export 방식이다. 
+`default` 방식의 경우 한 파일에서 한개의 데이터만 export 할 수 있다.  
+`named` 방식의 경우 한 파일에서 여러개의 데이터를 내보낼 수 있다.
+
+ex) 
+```JS
+export function random() {
+  return Math.floor(Math.random() * 10)
+}
+
+export const user = {
+  name : 'Malade',
+  age : 28
+}
+
+// getRandom.js 에서 main.js로 export
+```
+
+```JS
+import { random, user } from './getRandom'
+
+console.log(random())
+console.log(user)
+
+// 결과 : 3
+//        {name : 'Malade', age : 28}
+```
+
+<hr/>
+
+```JS
+export default function getType(data) {
+  return Object.prototype.toString.call(data).slice(8, -1)
+}
+
+export default 123
+
+// getType.js 에서 default 방식으로 export
+```
+
+```JS
+import getType from './getType'
+
+console.log(getType([1, 2, 3]))
+
+// 결과 : ERROR - Only one default export allowed per module
+```
+
+이처럼, `named` export 방식의 경우 한 번에 여러개의 데이터를 export 할 수 있지만, `default` export의 경우 오직 하나의 데이터만을 내보낼 수 있음을 알 수 있다. 
+단, `named` export 방식의 경우 import 할 때 가져오는 데이터를 `중괄호 {}` 안에 넣어줘야 한다.
