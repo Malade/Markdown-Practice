@@ -272,3 +272,106 @@ function returnVoid(msg: string): void {
 const r = returnVoid('리턴이 없음')
 // r의 타입은 void
 ```
+
+## noImplicitAny
+타입이 명시적으로 지정되지 않은 경우 컴파일러에서 타입을 any로 추론하게 되는데, 이 경우 `noImplicitAny` 옵션을 켜게 되면 컴파일 오류를 일으켜 타입을 명시적으로 지정하도록 유도한다.
+
+## strictNullChecks
+모든 타입에 자동으로 들어있는 null과 undefined를 제거해준다.  
+함수 등의 리턴 값이 명시적으로 지정되지 않은 경우 함수가 정상작동하지 않았다면 리턴 값을 undefined로 추론하는데, 이런 경우를 막아준다.
+
+## noImplicitReturns
+함수 내에서 모든 코드가 값을 리턴하지 않으면, 컴파일 에러를 발생시킨다.
+
+## 타입을 만드는 방법
+TS에는 본인만의 타입을 만드는 몇가지 방법이 존재한다.
+- interface
+```TS
+interface PersonInterface {
+    name: string
+    age: number
+}
+```
+
+- type alias
+```TS
+type PersonTypeAlias = {
+    name: string
+    age: number
+}
+```
+이 외에도 `class` 등을 사용 가능하다.
+
+## structural type system
+구조가 같으면, 같은 타입이다.
+
+```TS
+interface IPerson {
+    name: string
+    age: number
+    speak(): string
+}
+
+type PersonType = {
+    name: string
+    age: number
+    speak(): string
+}
+
+let personInterface: IPerson = {} as any
+let personType: PersonType = {} as any
+
+personInterface = personType
+personType = personInterface
+```
+위의 예제는 structural type system의 예제로, `Iperson` 타입으로 선언된 `personInterface` 와 `PersonType` 으로 선언된 `personType`은 내부적인 구조가 같기 때문에, 서로를 할당해도 오류가 일어나지 않는다.
+
+## nominal type system
+구조가 같아도 이름이 다르면, 다른 타입이다
+```TS
+type PersonID = string & { readonly brand: unique symbol }
+
+function PersonID(id: string): PersonID {
+    return id as PersonID
+}
+
+function getPersonById(id: PersonID) {}
+
+getPersonById(PErsonID('id-aaaaaa'))
+getPErsonById('id-aaaaaa')
+```
+위의 예제는 사용할 수 있다는 예시이고,  
+기본적으로 TS는 structural type system을 따른다. 
+
+# Type Compatibility
+같거나 서브 타입인 경우, 할당이 가능하다. 이를 `공변` 이라 한다.  
+
+함수의 매계변수 타입만 같거나 슈퍼타입인 경우, 할당이 가능하다. 이를 `반병`이라 한다.
+
+```TS
+class Person {}
+class Developer extends Person {
+    coding() {}
+}
+class StartupDeveloper extends Developer {
+    burning() {}
+}
+
+function tellme(f: (d: Developer) => Developer) {}
+
+//Developer => Developer 에 Developer => Developer 를 할당하는 경우
+tellme(function dToD(d: Developer): Developer {
+    return new Developer()
+})
+
+// Developer => Developer 에 Person => Developer 를 할당하는 경우
+tellme(function pToD(d: Person): Developer {
+    return new Developer()
+})
+
+// Developer => Developer 에 StartupDeveloper => Developer 를 할당하는 경우
+tellme(function sToD(d: StartupDeveloper): Developer {
+    return new Developer()
+})
+```
+`strictFunctionTypes` 옵션을 켜면, 함수 할당시 함수의 매개변수 타입이 같거나 슈퍼타입인 경우가 아닌 경우 에러를 통해 경고함.
