@@ -375,3 +375,75 @@ tellme(function sToD(d: StartupDeveloper): Developer {
 })
 ```
 `strictFunctionTypes` 옵션을 켜면, 함수 할당시 함수의 매개변수 타입이 같거나 슈퍼타입인 경우가 아닌 경우 에러를 통해 경고함.
+
+## 타입 별칭(Type Alias)
+Interface와 비슷함.  
+Primitive, Union Type, Tuple, Function  
+기타 직접 작성해야 하는 타입을 다른 이름으로 지정할 수 있음.  
+만들어진 타입의 refer로 사용하는 것이지 타입을 새로 만드는것이 아니다.
+
+```TS
+type MystringType = string
+const str = 'world'
+let myStr: MyStringType = 'hello'
+myStr = str
+// 크게 의미 없는 Alias
+```
+
+### Aliasing Union Type
+```TS
+let perso: string | number = 0
+person = 'Mark'
+type StringOrNumber = string | number
+let another: StringOrNumber = 0
+another = 'Anna'
+
+// 유니온 타입은 A도 B도 가능한 타입. 길게 쓸 것을 짧게 줄일 수 있어서 효율적
+```
+
+### Aliasing Tuple
+```TS
+let person: [string, number] = ['Mark', 35]
+type PersonTuple = [string, number]
+let another: PersonTuple = ['Anna', 24]
+
+// 튜플에 별칭을 줘서 여러군데서 사용할 수 있도록 함
+```
+
+### Aliasing Function
+```TS
+type EatType = (food: string) => void
+```
+
+## include
+컴파일할 파일 경로를 설정함(src 폴더 하위의 모든 .ts 확장자를 가진 파일)
+
+## exclude
+컴파일 대상을 제외하는 옵션
+
+## @types
+TS 2.0부터 사용 가능해진 내장 type definition 시스템.  
+아무 설정을 안하면 `node_modules/@types` 라는 모든 경로를 찾아서 사용함.  
+`typeRoots` 를 사용하면 배열 안의 모듈 혹은 `./node_modules/@types/` 안의 모듈 이름에서 찾아옴.  
+[] 빈 배열을 넣는다는건 이 시스템을 이용하지 않겠다는 것.  
+typeRoots와 types 를 같이 사용하지 않음.
+
+## target 과 lib
+- target
+    - 빌드의 결과물을 어떤 버전으로 할 것인지 지정.  
+    지정을 안하면 기본은 es3
+
+- lib
+    - 기본 type definition 라이브러리를 어떤 것을 사용할 것인지 지정.
+    - lib 를 지정하지 않을 때
+        - target이 'es3'이고, 디폴트로 lib.d.ts를 사용
+        - target이 'es5'이면, 디폴트로 dom, es5, scripthost를 사용
+        - target이 'es6'이면, 디폴트로 dom, es6, dom.iterable, scripthost를 사용
+    - lib를 지정하면 그 lib 배열로만 라이브러리를 사용함.
+        - 빈 배열 [] => 'no definition found'
+
+## compile options
+- rootDir
+    - 시작하는 루트 폴더
+- outDir 
+    - 컴파일 후 생성되는 js 파일이 생성될 폴더명
