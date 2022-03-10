@@ -447,3 +447,33 @@ typeRoots와 types 를 같이 사용하지 않음.
     - 시작하는 루트 폴더
 - outDir 
     - 컴파일 후 생성되는 js 파일이 생성될 폴더명
+- outFile
+    - 단일파일로 출력시 파일명
+
+## compile options - strict
+모든 strict type checking 옵션을 사용하거나 사용하지 않을 수 있다.
+- noImplicitAny  
+    명시적으로 any라는 타입으로 지정하지 않았다면 오류를 발생시킴. any 타입으로 지정되지 않았다면 any가 아닌것.
+    - suppressImplicitAnyIndexErrors  
+        noImplicitAny를 사용할 때, 인덱스 객체에 인덱스 signature가 없는 경우 오류가 발생하는데 이를 예외처리함.
+- noImplicitThis  
+명시적이지 않게 any 타입을 사용하여 this 표현식에 사용하면 오류를 발생시킴.  
+첫번째 매개변수 자리에 this를 놓고, this 에 대한 타입을 어떤 것이라도 표현하지 않으면 noImplicitAny가 오류를 발생시킴
+```TS
+function noImplicitThisFunc(this, name: string, age: number) {  // this 의 타입이 지정되지 않아 error
+    this.name = name
+    this.age = age
+
+    return this 
+}
+```
+JS에서는 매개변수에 this 를 넣을 경우 이미 예약된 키워드라 SyntaxError를 일으킨다.  
+Class 에서 constructor 를 제외한 멤버 함수의 첫번째 매개변수도 일반 함수와 마찬가지로 this를 사용할 수 있음
+
+- strictNullChecks  
+null 및 undefined 값이 모든 유형의 도메인에 속하지 않으며, 그 자신을 타입으로 가지거나 any 일 경우에만 할당이 가능.  
+예외로 undefined에는 void를 할당 가능  
+null과 undefined 값을 가지기 위해서는 union type을 이용해 직접 명시해야함
+
+- strictFunctionTypes
+
