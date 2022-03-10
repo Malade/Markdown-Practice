@@ -476,4 +476,55 @@ null 및 undefined 값이 모든 유형의 도메인에 속하지 않으며, 그
 null과 undefined 값을 가지기 위해서는 union type을 이용해 직접 명시해야함
 
 - strictFunctionTypes
+반환 타입은 공변적(Covariant), 인자 타입은 반공변적(Contravariant) 이다.
+그런데 TS에서는 인자 타입이 공변적이면서 반공변적임  
+이 문제를 해결하는 옵션이 바로 `strictFunctionTypes` 인데, 옵션을 켜면 에러가 나지 않던 것을 에러가 나게 한다.
+```TS
+const button = document.querySelector('#id') as HTMLButtonElement
+button.addEventListener('keydown', (e: MouseEvent) => {})
+```
+위와 같은 코드는 이제 에러가 발생. 
+- strictPropertyInitialization  
+정의되지 않은 클래스의 속성이 생성자에서 초기화되었는지 확인함.  
+이 옵션을 사용하기 위해서는 `--strictNullChecks`를 사용하도록 설정해야함
 
+```TS
+class Person {
+    private _name: string // 생성자 단에서 값이 초기화되지 않아 오류
+    private _age: number // 같은 이유로 오류
+
+    constructor() {}
+
+    public print() {
+        console.log(this._name, this._age)
+    }
+}
+
+---------------------------------------------------
+class Person{
+    private _name: string // 생성자에서 초기화 되었으므로 오류 없음
+    private _age: number
+
+    constructor(name: string, age: number) {
+        this._name = name
+        this._age = age
+    }
+}
+```
+생성자에서 초기화 하지 않는 경우, 보통 다른 함수로 초기화한다(async 함수)
+constructor 에서는 async를 사용할 수 없다
+
+- strictBindCallApply  
+Function의 내장 함수인 bind, call, apply 에 대한 더 엄격한 검사 수행
+    - bind  
+    해당 함수 안에서 사용할 this와 인자를 설정해주는 역할
+    - call  
+    this와 인자를 설정 후, 실행까지 함  
+    함수의 인자를 `여러 인자의 나열`로 넣어서 사용
+    - apply  
+    this와 인자를 설정 후, 실행까지 함  
+    `모든 인자를 배열 하나로` 넣어서 사용
+
+- alwaysStrict  
+각 소스 파일에 대해 JS의 strict mode로 코드를 분석하고, '엄격하게 사용'을 해제함.  
+syntax error가 ts error로 나오며, 컴파일된 JS 파일에 use strict가 추가됨.

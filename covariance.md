@@ -1,7 +1,7 @@
 # 공변과 반공변
 잘 이해가 가지 않는 항목이기 때문에, 따로 문서를 만들기로 했다.  
 참고 링크와 함께 공부를 해보면 좋을 것 같다.  
-[공변과 반공변](https://iamssen.medium.com/typescript-%EC%97%90%EC%84%9C%EC%9D%98-%EA%B3%B5%EB%B3%80%EC%84%B1%EA%B3%BC-%EB%B0%98%EA%B3%B5%EB%B3%80%EC%84%B1-strictfunctiontypes-a82400e67f2)
+[공변과 반공변](https://www.zerocho.com/category/TypeScript/post/5faa8c657753bd00048a27d8)
 
 ## 간결한 예시
 - 공변성
